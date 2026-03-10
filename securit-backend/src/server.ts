@@ -19,6 +19,7 @@ import { geoipRoutes } from './routes/geoip';
 import { reportsRoutes } from './routes/reports';
 import { alertsRoutes } from './routes/alerts';
 import { updatesRoutes } from './routes/updates';
+import { permissionsRoutes } from './routes/permissions';
 
 export async function buildServer() {
   const fastify = Fastify({
@@ -135,6 +136,7 @@ export async function buildServer() {
       await v1.register(reportsRoutes, { prefix: '/reports' });
       await v1.register(alertsRoutes, { prefix: '/alerts' });
       await v1.register(updatesRoutes, { prefix: '/updates' });
+      await v1.register(permissionsRoutes, { prefix: '/permissions' });
     },
     { prefix: '/v1' }
   );

@@ -2,7 +2,7 @@
 
 ## What Was Built
 
-A complete, production-ready backend API for the **PrivacyLens** Android cybersecurity application, using **TypeScript + Fastify + PostgreSQL + Redis + Kafka + MinIO + OpenSearch**.
+A complete, production-ready backend API for the **PrivacyLens** Android cybersecurity application, using **TypeScript + Fastify + PostgreSQL + Redis + MinIO + OpenSearch**.
 
 ## Project Structure
 
@@ -13,7 +13,6 @@ src/
 │   ├── logger.ts        ← Pino logger (pretty dev / JSON prod)
 │   ├── database.ts      ← PostgreSQL pool + query helpers
 │   ├── redis.ts         ← Redis client + cache helper
-│   ├── kafka.ts         ← Kafka producer/consumer
 │   └── minio.ts         ← MinIO object storage client
 ├── db/
 │   ├── migrations/
@@ -33,11 +32,12 @@ src/
 │   ├── geoip.ts         ← POST /lookup
 │   ├── reports.ts       ← POST /upload, GET /history
 │   ├── alerts.ts        ← GET /explain/:alert_code
-│   └── updates.ts       ← GET /check
+│   ├── updates.ts       ← GET /check
+│   └── permissions.ts   ← App permissions management
 └── server.ts            ← Fastify app bootstrap
 ```
 
-## API Endpoints (13 total)
+## API Endpoints (15 total)
 
 | Method | Endpoint                         | Auth | Description                 |
 |--------|----------------------------------|------|-----------------------------|
@@ -53,6 +53,8 @@ src/
 | GET    | `/v1/reports/history`            | ✅    | Get report history          |
 | GET    | `/v1/alerts/explain/:code`       | ✅    | Alert explanation           |
 | GET    | `/v1/updates/check`              | ✅    | Intelligence version check  |
+| GET    | `/v1/permissions/:package_name`  | ✅    | Get app permissions        |
+| POST   | `/v1/permissions/request`        | ✅    | Update app permissions     |
 | GET    | `/health`                        | ❌    | Health check                |
 
 ## Docker Services (6 containers)
@@ -62,7 +64,6 @@ src/
 | privacylens-api   | Custom (Node 20 Alpine)        | 3000        |
 | privacylens-postgres | PostgreSQL 16 Alpine        | 5432        |
 | privacylens-redis | Redis 7 Alpine                 | 6379        |
-| privacylens-kafka | Confluent Kafka 7.6 (KRaft)    | 9092        |
 | privacylens-minio | MinIO latest                   | 9000, 9001  |
 | privacylens-opensearch | OpenSearch 2.12            | 9200, 9600  |
 
