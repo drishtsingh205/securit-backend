@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { query, queryOne } from '../config/database';
 import { reportUploadSchema } from '../schemas/validation';
-import { publishEvent } from '../config/kafka';
+import { publishEvent } from '../config/events';
 import { logger } from '../config/logger';
 
 export async function reportsRoutes(fastify: FastifyInstance): Promise<void> {
@@ -82,19 +82,14 @@ export async function reportsRoutes(fastify: FastifyInstance): Promise<void> {
           [device.id, session_id, privacy_score, alerts, JSON.stringify(top_apps)]
         );
 
-        // Publish Kafka event for async processing
-        try {
-          await publishEvent('privacy-reports', {
-            id: session_id,
-            device_id,
-            privacy_score,
-            alerts,
-            timestamp: new Date().toISOString(),
-          });
-        } catch (kafkaErr) {
-          // Non-critical: log but don't fail the request
-          logger.warn({ err: kafkaErr }, 'Failed to publish report to Kafka');
-        }
+        // Publish event to Redis queue for async processing
+        await publishEvent('privacy-reports', {
+          id: session_id,
+          device_id,
+          privacy_score,
+          alerts,
+          timestamp: new Date().toISOString(),
+        });
 
         logger.info({ session_id, device_id }, 'Privacy report uploaded');
 

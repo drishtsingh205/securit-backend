@@ -25,10 +25,6 @@ export const env = {
   JWT_ACCESS_EXPIRY: parseInt(process.env.JWT_ACCESS_EXPIRY || '86400', 10),
   JWT_REFRESH_EXPIRY: parseInt(process.env.JWT_REFRESH_EXPIRY || '604800', 10),
 
-  // Kafka
-  KAFKA_BROKERS: (process.env.KAFKA_BROKERS || 'localhost:9092').split(','),
-  KAFKA_CLIENT_ID: process.env.KAFKA_CLIENT_ID || 'privacylens-api',
-
   // MinIO
   MINIO_ENDPOINT: process.env.MINIO_ENDPOINT || 'localhost',
   MINIO_PORT: parseInt(process.env.MINIO_PORT || '9000', 10),
